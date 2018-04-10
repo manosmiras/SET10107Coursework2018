@@ -7,25 +7,30 @@ import model.NeuralNetwork;
 import model.LunarParameters.DataSet;
 
 public class Parameters {
- 
+	
+	enum CrossoverType{SinglePoint, Uniform}
+	enum SelectionType{Roulette, Tournament}
 	/**
 	 * These parameter values can be changed 
 	 * You may add other Parameters as required to this class 
 	 * 
 	 */
-	private static int numHidden = 3;	
+	private static int numHidden = 5;	
 	private static int numGenes = calculateNumGenes();
 	public static double minGene = -3; // specifies minimum and maximum weight values 
 	public static double maxGene = +3;
-		
-	public static int popSize = 100;
+	
+	public static int popSize = 200;
 	public static int maxEvaluations = 20000;
 	
+	public static int tournamentSize = (int) (popSize * 0.2);
+	public static SelectionType selectionType = SelectionType.Roulette;
+	public static CrossoverType crossoverType = CrossoverType.Uniform;
 	// Parameters for mutation 
 	// Rate = probability of changing a gene
 	// Change = the maximum +/- adjustment to the gene value
-	public static double mutateRate = 0.15; // mutation rate for mutation operator
-	public static double mutateChange = 0.15; // delta change for mutation operator
+	public static double mutateRate = 0.6; // mutation rate for mutation operator
+	public static double mutateChange = 0.001; // delta change for mutation operator
 	
 	//Random number generator used throughout the application
 	public static long seed = System.currentTimeMillis();

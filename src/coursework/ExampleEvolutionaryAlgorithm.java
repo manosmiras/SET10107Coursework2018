@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Random;
 
+import coursework.Parameters.CrossoverType;
+import coursework.Parameters.SelectionType;
 import model.Fitness;
 import model.Individual;
 import model.LunarParameters.DataSet;
@@ -17,14 +19,14 @@ import model.NeuralNetwork;
  */
 public class ExampleEvolutionaryAlgorithm extends NeuralNetwork {
 
-	private int tournamentSize = 12;
+	//private int tournamentSize = 75;
 	private Individual previousBest = new Individual();
-	
 	/**
 	 * The Main Evolutionary Loop
 	 */
 	@Override
-	public void run() {		
+	public void run() {
+
 		//Initialise a population of Individuals with random weights
 		population = initialise();
 
@@ -44,18 +46,27 @@ public class ExampleEvolutionaryAlgorithm extends NeuralNetwork {
 			 * You must set the best Individual at the end of a run
 			 * 
 			 */
-
+			Individual parent1;
+			Individual parent2;
 			// Select 2 Individuals from the current population. Currently returns random Individual
-			Individual parent1 = select(); 
-			Individual parent2 = select();
-			ArrayList<Individual> children = new ArrayList<Individual>();
-			// Generate a child by crossover. Not Implemented
-			if (evaluations % 10 == 100)
-				children = reproduceUniform(parent1, parent2);
+			if (Parameters.selectionType == SelectionType.Roulette)
+			{
+				parent1 = rouletteSelection(); 
+				parent2 = rouletteSelection();
+			}
 			else
-				children = reproduce(parent1, parent2);	
-
-		
+			{
+				parent1 = tournamentSelection(); 
+				parent2 = tournamentSelection();
+			}
+				
+			ArrayList<Individual> children = new ArrayList<Individual>();
+			// Generate children by single-point crossover
+			if (Parameters.crossoverType == CrossoverType.SinglePoint)
+				children = reproduce(parent1, parent2);
+			// Generate children by uniform crossover
+			else 
+				children = reproduceUniform(parent1, parent2);
 
 			//mutate the offspring
 			mutate(children);
@@ -65,10 +76,10 @@ public class ExampleEvolutionaryAlgorithm extends NeuralNetwork {
 
 			// Replace children in population
 			replace(children);
-			
+
 			// check to see if the best has improved
 			best = getBest(population);
-			
+
 			if(previousBest.equals(best))
 			{
 				System.out.println("same");
@@ -134,12 +145,12 @@ public class ExampleEvolutionaryAlgorithm extends NeuralNetwork {
 	 * NEEDS REPLACED with proper selection this just returns a copy of a random
 	 * member of the population
 	 */
-	private Individual select() {
+	private Individual tournamentSelection() {
 		// Create a tournament population
 		ArrayList<Individual> tournamentPopulation = new ArrayList<Individual>();
 
 		// For each place in the tournament get a random individual
-		for (int i = 0; i < tournamentSize; i++)
+		for (int i = 0; i < Parameters.tournamentSize; i++)
 		{
 			int randomId = (int) (Math.random() * population.size());
 			tournamentPopulation.add(population.get(randomId).copy());
@@ -149,6 +160,33 @@ public class ExampleEvolutionaryAlgorithm extends NeuralNetwork {
 
 		//Individual parent = population.get(Parameters.random.nextInt(Parameters.popSize));
 		return fittest.copy();
+	}
+
+	// Returns the selected index based on the weights(probabilities)
+	private Individual rouletteSelection() {
+		// calculate the total weight
+		double weight_sum = 0;
+		for(int i=0; i<population.size(); i++) 
+		{
+			// do 1 - fitness, to reverse minimization
+			weight_sum += (1 - population.get(i).fitness);
+		}
+		// get a random value
+		double value = randUniformPositive() * weight_sum;	
+		// locate the random value based on the weights
+		for(int i = 0; i < population.size(); i++) {		
+			value -= (1 - population.get(i).fitness);		
+			if(value < 0) 
+				return population.get(i).copy();
+		}
+		// when rounding errors occur, we return the last item's index 
+		return population.get(population.size() - 1).copy();
+	}
+
+	// Returns a uniformly distributed double value between 0.0 and 1.0
+	double randUniformPositive() {
+		// easiest implementation
+		return new Random().nextDouble();
 	}
 
 	/**
@@ -251,8 +289,9 @@ public class ExampleEvolutionaryAlgorithm extends NeuralNetwork {
 	private void replace(ArrayList<Individual> individuals) {
 		for(Individual individual : individuals) {
 			int idx = getWorstIndex();
-			if(population.get(idx).fitness > individual.fitness)
-				population.set(idx, individual);
+			population.set(idx, individual);
+			//if(population.get(idx).fitness > individual.fitness)
+
 		}		
 	}
 
