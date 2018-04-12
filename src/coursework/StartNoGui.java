@@ -19,8 +19,8 @@ public class StartNoGui {
 		 * Train the Neural Network using our Evolutionary Algorithm 
 		 * 
 		 */
-		int samples = 1;
-		String testName = "test";
+		int samples = 50;
+		String testName = "tournament-size-50-percent-50-samples";
 		
 		double averageTest = 0;
 		double averageTraining = 0;
@@ -40,7 +40,7 @@ public class StartNoGui {
 			//Parameters.popSize = 250; // Population Size
 
 			//number of hidden nodes in the neural network
-			Parameters.setHidden(6);
+			//Parameters.setHidden(5);
 
 			//Set the data set for training 
 			Parameters.setDataSet(DataSet.Training);
@@ -56,7 +56,7 @@ public class StartNoGui {
 			 */
 			System.out.println(nn.best);
 			averageTraining += nn.best.fitness;
-			csv.append(nn.best+"");
+			csv.appendDouble(nn.best.fitness);
 			csv.append(",");
 			
 
@@ -67,8 +67,9 @@ public class StartNoGui {
 			double fitness = Fitness.evaluate(nn);
 			System.out.println("Fitness on " + Parameters.getDataSet() + " " + fitness);
 			averageTest += fitness;
-			csv.append(fitness+"");
+			csv.appendDouble(fitness);
 			csv.append("\n");
+			System.out.println((i+1) + " out of " + samples);
 		}
 		averageTest /= samples;
 		averageTraining /= samples;

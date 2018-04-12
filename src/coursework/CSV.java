@@ -18,6 +18,11 @@ public class CSV {
     	sb.append(data);
     }
     
+    public void appendDouble(double value)
+    {
+    	sb.append(value);
+    }
+    
 	public void save(String name) throws FileNotFoundException
 	{
     	pw = new PrintWriter(new File(name + ".csv"));

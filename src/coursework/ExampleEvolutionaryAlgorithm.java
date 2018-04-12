@@ -18,9 +18,6 @@ import model.NeuralNetwork;
  * 
  */
 public class ExampleEvolutionaryAlgorithm extends NeuralNetwork {
-
-	//private int tournamentSize = 75;
-	private Individual previousBest = new Individual();
 	/**
 	 * The Main Evolutionary Loop
 	 */
@@ -39,7 +36,7 @@ public class ExampleEvolutionaryAlgorithm extends NeuralNetwork {
 		 */		
 
 		while (evaluations < Parameters.maxEvaluations) {
-
+			
 			/**
 			 * this is a skeleton EA - you need to add the methods.
 			 * You can also change the EA if you want 
@@ -80,13 +77,9 @@ public class ExampleEvolutionaryAlgorithm extends NeuralNetwork {
 			// check to see if the best has improved
 			best = getBest(population);
 
-			if(previousBest.equals(best))
-			{
-				System.out.println("same");
-			}
-			previousBest = best;
 			// Implemented in NN class. 
-			outputStats();
+			//if (evaluations % 1000 == 0)
+			//	outputStats();
 
 			//Increment number of completed generations			
 		}
