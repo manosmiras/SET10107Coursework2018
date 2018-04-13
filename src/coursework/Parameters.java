@@ -15,22 +15,22 @@ public class Parameters {
 	 * You may add other Parameters as required to this class 
 	 * 
 	 */
-	private static int numHidden = 5;	
+	private static int numHidden = 6;	
 	private static int numGenes = calculateNumGenes();
-	public static double minGene = -3; // specifies minimum and maximum weight values 
-	public static double maxGene = +3;
+	public static double minGene = -1; // specifies minimum and maximum weight values 
+	public static double maxGene = +1;
 	
-	public static int popSize = 50;
+	public static int popSize = 100;
 	public static int maxEvaluations = 20000;
 	
-	public static int tournamentSize = (int) (popSize * 0.5);
+	public static int tournamentSize = (int) (popSize * 0.3);
 	public static SelectionType selectionType = SelectionType.Tournament;
 	public static CrossoverType crossoverType = CrossoverType.Uniform;
 	// Parameters for mutation 
 	// Rate = probability of changing a gene
 	// Change = the maximum +/- adjustment to the gene value
-	public static double mutateRate = 0.01; // mutation rate for mutation operator
-	public static double mutateChange = 0.001; // delta change for mutation operator
+	public static double mutateRate = 0.05; // mutation rate for mutation operator
+	public static double mutateChange = 1; // delta change for mutation operator
 	
 	//Random number generator used throughout the application
 	public static long seed = System.currentTimeMillis();

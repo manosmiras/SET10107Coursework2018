@@ -2,6 +2,7 @@ package coursework;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Random;
 
 import coursework.Parameters.CrossoverType;
@@ -23,7 +24,8 @@ public class ExampleEvolutionaryAlgorithm extends NeuralNetwork {
 	 */
 	@Override
 	public void run() {
-
+		double previousBest = 0;
+		int noChangeCount = 0;
 		//Initialise a population of Individuals with random weights
 		population = initialise();
 
@@ -34,7 +36,7 @@ public class ExampleEvolutionaryAlgorithm extends NeuralNetwork {
 		/**
 		 * main EA processing loop
 		 */		
-
+		
 		while (evaluations < Parameters.maxEvaluations) {
 			
 			/**
@@ -43,6 +45,7 @@ public class ExampleEvolutionaryAlgorithm extends NeuralNetwork {
 			 * You must set the best Individual at the end of a run
 			 * 
 			 */
+			
 			Individual parent1;
 			Individual parent2;
 			// Select 2 Individuals from the current population. Currently returns random Individual
@@ -70,17 +73,37 @@ public class ExampleEvolutionaryAlgorithm extends NeuralNetwork {
 
 			// Evaluate the children
 			evaluateIndividuals(children);			
-
+			
+			Collections.sort(population);
+			
 			// Replace children in population
 			replace(children);
 
 			// check to see if the best has improved
 			best = getBest(population);
 
+			if(best.fitness == previousBest)
+			{
+				noChangeCount++;
+				
+				if (noChangeCount >= 500 && best.fitness > 0.05)
+				{
+					population = initialise();
+				}
+			}
+			else
+			{
+				noChangeCount = 0;
+			}
+			
 			// Implemented in NN class. 
 			//if (evaluations % 1000 == 0)
-			//	outputStats();
-
+				outputStats();
+			//for(int i = 0; i < population.size(); i++)
+			//{
+			//	System.out.println( i + " " + population.get(i).fitness);
+			//}
+			previousBest = best.fitness;
 			//Increment number of completed generations			
 		}
 
@@ -264,10 +287,15 @@ public class ExampleEvolutionaryAlgorithm extends NeuralNetwork {
 			for (int i = 0; i < individual.chromosome.length; i++) {
 				if (Parameters.random.nextDouble() < Parameters.mutateRate) {
 					if (Parameters.random.nextBoolean()) {
-						individual.chromosome[i] += (Math.random() * 1);
+						individual.chromosome[i] += (0.1 + (Parameters.random.nextDouble() * Parameters.mutateChange));
 					} else {
-						individual.chromosome[i] -= (Math.random() * 1);
+						individual.chromosome[i] -= (0.1 + (Parameters.random.nextDouble() * Parameters.mutateChange));
 					}
+					// Make sure that is stays within limits
+					if(individual.chromosome[i] > Parameters.maxGene)
+						individual.chromosome[i] = Parameters.maxGene;
+					else if (individual.chromosome[i] < Parameters.minGene)
+						individual.chromosome[i] = Parameters.minGene;
 				}
 			}
 		}		
@@ -280,11 +308,12 @@ public class ExampleEvolutionaryAlgorithm extends NeuralNetwork {
 	 * 
 	 */
 	private void replace(ArrayList<Individual> individuals) {
-		for(Individual individual : individuals) {
-			int idx = getWorstIndex();
-			population.set(idx, individual);
-			//if(population.get(idx).fitness > individual.fitness)
-
+		for(Individual individual : individuals) 
+		{
+			int idx = Parameters.random.nextInt((int)(population.size() * 0.1));//getWorstIndex();
+			//if(population.get(population.size() - 1 - idx).fitness > individual.fitness)
+				population.set(population.size() - 1 - idx, individual);
+			//System.out.println(population.size() - 1 - idx);
 		}		
 	}
 

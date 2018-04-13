@@ -19,8 +19,8 @@ public class StartNoGui {
 		 * Train the Neural Network using our Evolutionary Algorithm 
 		 * 
 		 */
-		int samples = 50;
-		String testName = "tournament-size-50-percent-50-samples";
+		int samples = 10;
+		String testName = "test";
 		
 		double averageTest = 0;
 		double averageTraining = 0;
