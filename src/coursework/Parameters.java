@@ -15,7 +15,7 @@ public class Parameters {
 	 * You may add other Parameters as required to this class 
 	 * 
 	 */
-	private static int numHidden = 6;	
+	private static int numHidden = 14;	
 	private static int numGenes = calculateNumGenes();
 	public static double minGene = -1; // specifies minimum and maximum weight values 
 	public static double maxGene = +1;
@@ -23,7 +23,7 @@ public class Parameters {
 	public static int popSize = 100;
 	public static int maxEvaluations = 20000;
 	
-	public static int tournamentSize = (int) (popSize * 0.3);
+	public static int tournamentSize = (int) (popSize * 0.1);
 	public static SelectionType selectionType = SelectionType.Tournament;
 	public static CrossoverType crossoverType = CrossoverType.Uniform;
 	// Parameters for mutation 

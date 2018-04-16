@@ -20,7 +20,7 @@ public class StartNoGui {
 		 * 
 		 */
 		int samples = 10;
-		String testName = "test";
+		String testName = "final-run";
 		
 		double averageTest = 0;
 		double averageTraining = 0;

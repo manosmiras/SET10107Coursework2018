@@ -224,10 +224,9 @@ public class ExampleEvolutionaryAlgorithm extends NeuralNetwork {
 			{
 				child1.chromosome[i] = chromosome1[i];
 			}
-
 			else
 			{
-				child1.chromosome[i] = chromosome2[i - chromosome2.length - 1];
+				child1.chromosome[i] = chromosome2[i - chromosome2.length];
 			}
 
 		}
@@ -241,7 +240,7 @@ public class ExampleEvolutionaryAlgorithm extends NeuralNetwork {
 			if (i < parent1.chromosome.length / 2)
 				child2.chromosome[i] = chromosome2[i];
 			else
-				child2.chromosome[i] = chromosome1[i - chromosome1.length - 1];
+				child2.chromosome[i] = chromosome1[i - chromosome1.length];
 		}
 
 		children.add(child1.copy());
